@@ -172,9 +172,9 @@ class Login extends Component {
 
     return (
       <div className="login" >
-        <Header title="ロープレ ログイン" />
-        <Button variant="contained" color="secondary" onClick={this.handleOnClick}>会話</Button>
-        <Button variant="contained" color="secondary" onClick={this.handleOnStopClick}>停止</Button>
+        <Header title="音声解析・性格分析" />
+        <Button variant="contained" color="secondary" onClick={this.handleOnClick}>録音開始</Button>&nbsp;
+        <Button variant="contained" color="secondary" onClick={this.handleOnStopClick}>停止・性格分析</Button>
         <div className="text">
           {
             messages.map(msg =>

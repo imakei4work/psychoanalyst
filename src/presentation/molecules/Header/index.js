@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from '../../../../public/img/Nissay-logo.png';
 import './style.css';
 
 class Header extends Component {

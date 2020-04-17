@@ -1,6 +1,6 @@
 {
-  "name": "nissay-role-play-login",
-  "description": "Login application.",
+  "name": "psychoanalyst",
+  "description": "analysis application.",
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
@@ -38,7 +38,7 @@
     "watson-speech": "0.36.2"
   },
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/",
+    "registry": "https://github.com/imakei4work/psychoanalyst",
     "access": "public"
   },
   "devDependencies": {
