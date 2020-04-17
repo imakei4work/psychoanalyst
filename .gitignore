@@ -1,0 +1,8 @@
+.DS_Store
+.env
+*.old
+*.bak
+node_modules/
+logs/
+output/
+*.yaml

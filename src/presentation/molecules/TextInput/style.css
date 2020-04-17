@@ -1,0 +1,14 @@
+.app-body {
+    width: 80%;
+    margin: auto;
+    margin-bottom: 18px;
+}
+.app-body-row {
+    margin: 5px 0px;
+}
+.app-body-text {
+    text-align: left;
+}
+.app-body-textbox {
+    float: right;
+}
