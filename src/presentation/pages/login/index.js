@@ -11,9 +11,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { Sunburst } from 'react-vis';
 import {
-  Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
+  Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend
 } from 'recharts';
 import './style.css';
 
@@ -28,7 +27,8 @@ class Login extends Component {
       stream: null,
       personality: null,
       needs: null,
-      values: null
+      values: null,
+      tones: null
     }
     this.handleOnClick = this.handleOnClick.bind(this);
     this.handleOnStopClick = this.handleOnStopClick.bind(this);
@@ -125,10 +125,14 @@ class Login extends Component {
         v.hex = "#12939A";
         v.name = this.dict[v.name];
       });
+      res.tones.forEach(t => {
+        t.hex = "#12939A";
+      });
       this.setState({
         personality: res.personality,
         needs: res.needs,
-        values: res.values
+        values: res.values,
+        tones: res.tones
       });
     });
   }
@@ -352,6 +356,79 @@ class Login extends Component {
                         <TableRow>
                           <Model align="left">変化許容性 / 興奮</Model>
                           <Description align="left">独立した行動、考え方、感覚を重視し、新しい経験を進んで受け入れる。</Description>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </div>
+              </div>
+            }
+          </div>
+          <div>
+            {
+              this.state.tones &&
+              <div className="analysis">
+                <div className="analysis-info">
+                  <BarChart
+                    width={500}
+                    height={300}
+                    data={this.state.tones}
+                    margin={{
+                      top: 5, right: 30, left: 20, bottom: 5,
+                    }}
+                    barSize={20}
+                  >
+                    <XAxis dataKey="name" scale="point" padding={{ left: 10, right: 10 }} />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <Bar dataKey="percentile" fill="#8884d8" background={{ fill: '#eee' }} />
+                  </BarChart>
+                  {/* <RadarChart outerRadius="50%" width={400} height={400} data={this.state.tones}>
+                    <PolarGrid />
+                    <PolarAngleAxis dataKey="name" />
+                    <PolarRadiusAxis domain={[0, 1]} />
+                    <Radar name="Mike" dataKey="percentile" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
+                  </RadarChart> */}
+                </div>
+                <div className="analysis-info">
+                  <TableContainer component={Paper}>
+                    <Table aria-label="caption table">
+                      <TableHead>
+                        <TableRow>
+                          <Model>トーン</Model>
+                          <Description align="left">トーンや感情を分析します。</Description>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableRow>
+                          <Model align="left">怒り</Model>
+                          <Description align="left">怒りは、不当行為、対立、屈辱、怠慢、裏切りから呼び起こされます。 能動的な怒りの場合、人は言葉や暴力でターゲットを攻撃します。 受動的な怒りの場合、人は黙って不機嫌になり、緊張と敵意を感じます。 (感情トーン)</Description>
+                        </TableRow>
+                        <TableRow>
+                          <Model align="left">不安</Model>
+                          <Description align="left">不安は、差し迫った危険に対する反応です。 これは、何らかの負の刺激に対する反応として引き起こされる生存メカニズムです。 不安は、軽い用心である場合や、極度の恐怖である場合があります。 (感情トーン)</Description>
+                        </TableRow>
+                        <TableRow>
+                          <Model align="left">喜び</Model>
+                          <Description align="left">喜び (つまり幸福) には、楽しみ、満足、娯楽という微妙な違いがあります。 喜びは、幸福、心の平穏、愛、安全、安心という感覚をもたらします。 (感情トーン)</Description>
+                        </TableRow>
+                        <TableRow>
+                          <Model align="left">悲しみ</Model>
+                          <Description align="left">悲しみは、喪失と損害の感情を示します。 人が静かで、意欲的でなく、引きこもっているときは、悲しみを感じているということを推測できます。 (感情トーン)</Description>
+                        </TableRow>
+                        <TableRow>
+                          <Model align="left">分析的</Model>
+                          <Description align="left">分析的トーンは、物事に対する人の論理的思考と分析的態度を示します。 分析的な人は、知的、理性的、きちょうめん、無感情、あるいは冷淡であると受け取られる可能性があります。 (言語トーン)</Description>
+                        </TableRow>
+                        <TableRow>
+                          <Model align="left">自信</Model>
+                          <Description align="left">自信トーンは、人の確信の度合いを示します。 自信のある人は、堂々としている、落ち着いている、希望に満ちている、あるいは尊大であると受け取られる可能性があります。 (言語トーン)</Description>
+                        </TableRow>
+                        <TableRow>
+                          <Model align="left">ためらい</Model>
+                          <Description align="left">ためらいトーンは、人の内気さの度合いを示します。 ためらう人は、不審、はっきりしない、あるいは疑わしいと受け取られる可能性があります。 (言語トーン)</Description>
                         </TableRow>
                       </TableBody>
                     </Table>
