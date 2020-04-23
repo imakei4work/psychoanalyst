@@ -51,7 +51,7 @@ module.exports = {
   "conservation": "不変",
   "hedonism": "快楽主義",
   "self-enhancement": "自己増進",
-  "open to change": "変化許容性",
+  "openness to change": "変化許容性",
   "helping others": "他人の役に立つ",
   "tradition": "伝統",
   "taking pleasure in life": "人生を楽しむ",

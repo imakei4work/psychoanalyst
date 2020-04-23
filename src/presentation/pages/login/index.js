@@ -16,8 +16,8 @@ import {
 } from 'recharts';
 import './style.css';
 
-const Model = withStyles(() => ({ root: { width: '100px', fontSize: '10px' } }))(TableCell);
-const Description = withStyles(() => ({ root: { width: '400px', fontSize: '10px' } }))(TableCell);
+const Model = withStyles(() => ({ root: { width: '100px', fontSize: '11px' } }))(TableCell);
+const Description = withStyles(() => ({ root: { width: '500px', fontSize: '11px' } }))(TableCell);
 
 class Login extends Component {
   constructor(props) {
@@ -31,7 +31,6 @@ class Login extends Component {
     }
     this.handleOnClick = this.handleOnClick.bind(this);
     this.handleDialogOnClose = this.handleDialogOnClose.bind(this);
-    //this.keywords = ["音声認識", "ディープラーニング", "技術"];
   }
 
   handleDialogOnClose(text) {
@@ -39,6 +38,7 @@ class Login extends Component {
       this.setState({ open: false });
     } else {
       httpClient.post('/api/analysis', { text: text }).then(res => {
+        console.log(JSON.stringify(res.values));
         res.personality.forEach(p => {
           p.hex = "#12939A";
           p.children.forEach(c => c.hex = "#12939A");
@@ -73,7 +73,7 @@ class Login extends Component {
               this.state.personality &&
               <div className="analysis">
                 <div className="analysis-info">
-                  <RadarChart outerRadius="50%" width={400} height={400} data={this.state.personality}>
+                  <RadarChart outerRadius="50%" width={500} height={500} data={this.state.personality}>
                     <PolarGrid />
                     <PolarAngleAxis dataKey="name" />
                     <PolarRadiusAxis domain={[0, 1]} />
@@ -122,7 +122,7 @@ class Login extends Component {
               this.state.needs &&
               <div className="analysis">
                 <div className="analysis-info">
-                  <RadarChart outerRadius="50%" width={400} height={400} data={this.state.needs}>
+                  <RadarChart outerRadius="50%" width={500} height={500} data={this.state.needs}>
                     <PolarGrid />
                     <PolarAngleAxis dataKey="name" />
                     <PolarRadiusAxis domain={[0, 1]} />
@@ -199,7 +199,7 @@ class Login extends Component {
               this.state.values &&
               <div className="analysis">
                 <div className="analysis-info">
-                  <RadarChart outerRadius="50%" width={400} height={400} data={this.state.values}>
+                  <RadarChart outerRadius="50%" width={500} height={500} data={this.state.values}>
                     <PolarGrid />
                     <PolarAngleAxis dataKey="name" />
                     <PolarRadiusAxis domain={[0, 1]} />
@@ -217,23 +217,23 @@ class Login extends Component {
                       </TableHead>
                       <TableBody>
                         <TableRow>
-                          <Model align="left">自己超越 / 他人の役に立つ	</Model>
+                          <Model align="left">自己超越</Model>
                           <Description align="left">他人の幸福や利益を気遣う。</Description>
                         </TableRow>
                         <TableRow>
-                          <Model align="left">不変 / 伝統</Model>
+                          <Model align="left">不変</Model>
                           <Description align="left">自己制約、秩序、および変化への抵抗を重視する。</Description>
                         </TableRow>
                         <TableRow>
-                          <Model align="left">快楽主義 / 人生を楽しむ</Model>
+                          <Model align="left">快楽主義</Model>
                           <Description align="left">自分自身のための喜びや感覚的満足を求める。</Description>
                         </TableRow>
                         <TableRow>
-                          <Model align="left">自己増進 / 成功する</Model>
+                          <Model align="left">自己増進</Model>
                           <Description align="left">自分自身のための個人的成功を求める。</Description>
                         </TableRow>
                         <TableRow>
-                          <Model align="left">変化許容性 / 興奮</Model>
+                          <Model align="left">変化許容性</Model>
                           <Description align="left">独立した行動、考え方、感覚を重視し、新しい経験を進んで受け入れる。</Description>
                         </TableRow>
                       </TableBody>
@@ -252,9 +252,7 @@ class Login extends Component {
                     width={500}
                     height={300}
                     data={this.state.tones}
-                    margin={{
-                      top: 5, right: 30, left: 20, bottom: 5,
-                    }}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                     barSize={20}
                   >
                     <XAxis dataKey="name" scale="point" padding={{ left: 10, right: 10 }} />
@@ -264,12 +262,6 @@ class Login extends Component {
                     <CartesianGrid strokeDasharray="3 3" />
                     <Bar dataKey="percentile" fill="#8884d8" background={{ fill: '#eee' }} />
                   </BarChart>
-                  {/* <RadarChart outerRadius="50%" width={400} height={400} data={this.state.tones}>
-                    <PolarGrid />
-                    <PolarAngleAxis dataKey="name" />
-                    <PolarRadiusAxis domain={[0, 1]} />
-                    <Radar name="Mike" dataKey="percentile" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
-                  </RadarChart> */}
                 </div>
                 <div className="analysis-info">
                   <TableContainer component={Paper}>
@@ -283,31 +275,31 @@ class Login extends Component {
                       <TableBody>
                         <TableRow>
                           <Model align="left">怒り</Model>
-                          <Description align="left">怒りは、不当行為、対立、屈辱、怠慢、裏切りから呼び起こされます。 能動的な怒りの場合、人は言葉や暴力でターゲットを攻撃します。 受動的な怒りの場合、人は黙って不機嫌になり、緊張と敵意を感じます。 (感情トーン)</Description>
+                          <Description align="left">怒りは、不当行為、対立、屈辱、怠慢、裏切りから呼び起こされます。 能動的な怒りの場合、人は言葉や暴力でターゲットを攻撃します。 受動的な怒りの場合、人は黙って不機嫌になり、緊張と敵意を感じます。</Description>
                         </TableRow>
                         <TableRow>
                           <Model align="left">不安</Model>
-                          <Description align="left">不安は、差し迫った危険に対する反応です。 これは、何らかの負の刺激に対する反応として引き起こされる生存メカニズムです。 不安は、軽い用心である場合や、極度の恐怖である場合があります。 (感情トーン)</Description>
+                          <Description align="left">不安は、差し迫った危険に対する反応です。 これは、何らかの負の刺激に対する反応として引き起こされる生存メカニズムです。 不安は、軽い用心である場合や、極度の恐怖である場合があります。</Description>
                         </TableRow>
                         <TableRow>
                           <Model align="left">喜び</Model>
-                          <Description align="left">喜び (つまり幸福) には、楽しみ、満足、娯楽という微妙な違いがあります。 喜びは、幸福、心の平穏、愛、安全、安心という感覚をもたらします。 (感情トーン)</Description>
+                          <Description align="left">喜び (つまり幸福) には、楽しみ、満足、娯楽という微妙な違いがあります。 喜びは、幸福、心の平穏、愛、安全、安心という感覚をもたらします。</Description>
                         </TableRow>
                         <TableRow>
                           <Model align="left">悲しみ</Model>
-                          <Description align="left">悲しみは、喪失と損害の感情を示します。 人が静かで、意欲的でなく、引きこもっているときは、悲しみを感じているということを推測できます。 (感情トーン)</Description>
+                          <Description align="left">悲しみは、喪失と損害の感情を示します。 人が静かで、意欲的でなく、引きこもっているときは、悲しみを感じているということを推測できます。</Description>
                         </TableRow>
                         <TableRow>
                           <Model align="left">分析的</Model>
-                          <Description align="left">分析的トーンは、物事に対する人の論理的思考と分析的態度を示します。 分析的な人は、知的、理性的、きちょうめん、無感情、あるいは冷淡であると受け取られる可能性があります。 (言語トーン)</Description>
+                          <Description align="left">分析的トーンは、物事に対する人の論理的思考と分析的態度を示します。 分析的な人は、知的、理性的、きちょうめん、無感情、あるいは冷淡であると受け取られる可能性があります。</Description>
                         </TableRow>
                         <TableRow>
                           <Model align="left">自信</Model>
-                          <Description align="left">自信トーンは、人の確信の度合いを示します。 自信のある人は、堂々としている、落ち着いている、希望に満ちている、あるいは尊大であると受け取られる可能性があります。 (言語トーン)</Description>
+                          <Description align="left">自信トーンは、人の確信の度合いを示します。 自信のある人は、堂々としている、落ち着いている、希望に満ちている、あるいは尊大であると受け取られる可能性があります。</Description>
                         </TableRow>
                         <TableRow>
                           <Model align="left">ためらい</Model>
-                          <Description align="left">ためらいトーンは、人の内気さの度合いを示します。 ためらう人は、不審、はっきりしない、あるいは疑わしいと受け取られる可能性があります。 (言語トーン)</Description>
+                          <Description align="left">ためらいトーンは、人の内気さの度合いを示します。 ためらう人は、不審、はっきりしない、あるいは疑わしいと受け取られる可能性があります。</Description>
                         </TableRow>
                       </TableBody>
                     </Table>
