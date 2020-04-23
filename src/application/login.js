@@ -1,7 +1,9 @@
 const { IamTokenManager, IamAuthenticator } = require('ibm-watson/auth');
 const PersonalityInsightsV3 = require('ibm-watson/personality-insights/v3');
-const ToneAnalyzerV3 = require('ibm-watson/tone-analyzer/v3');
 const LanguageTranslatorV3 = require('ibm-watson/language-translator/v3');
+const ToneAnalyzerV3 = require('ibm-watson/tone-analyzer/v3');
+const dictionaly = require('./dictionary');
+
 
 const tokenManager = new IamTokenManager({ apikey: 'MZdmc21GHyc0rmKWziFENKHCfbKn1GCnYCtrc8tMYM67' });
 const serviceUrl = "https://api.jp-tok.speech-to-text.watson.cloud.ibm.com/instances/3d0ee6eb-cc67-4174-b2d9-addbce96b51d";
@@ -45,9 +47,10 @@ const toneAnalyzer = new ToneAnalyzerV3({
 module.exports.analysis = async (req, res) => {
   let text = req.body.text;
   try {
-
+    /************************************/
     // Personality Insight
-    const profileParams = {
+    /************************************/
+    let profile = await personalityInsights.profile({
       content: {
         contentItems: [
           {
@@ -60,23 +63,25 @@ module.exports.analysis = async (req, res) => {
         ]
       },
       contentType: 'application/json'
-    };
-    let profile = await personalityInsights.profile(profileParams);
+    });
+    // 翻訳
+    profile.result.personality.forEach(p => {
+      p.name = dictionaly[p.name.toLowerCase()];
+      p.children.forEach(c => c.name = dictionaly[c.name.toLowerCase()]);
+    });
+    profile.result.needs.forEach(n => n.name = dictionaly[n.name.toLowerCase()]);
+    profile.result.values.forEach(v => v.name = dictionaly[v.name.toLowerCase()]);
 
+    /************************************/
     // Language Translator
-    const translateParams = {
-      text: text,
-      modelId: 'ja-en',
-    };
-    let translate = await languageTranslator.translate(translateParams);
-    let english = translate.result.translations.map(t => t.translation).reduce((accumu, current) => accumu + current);
-    console.log(english);
+    /************************************/
+    let translate = await languageTranslator.translate({ text: text, modelId: 'ja-en' });
+    let english = translate.result.translations.map(t => t.translation).reduce((a, c) => a + c);
+
+    /************************************/
     // Tone Analyzer
-    const toneParams = {
-      toneInput: { 'text': english },
-      contentType: 'application/json',
-    };
-    let tone = await toneAnalyzer.tone(toneParams);
+    /************************************/
+    let tone = await toneAnalyzer.tone({ toneInput: { 'text': english }, contentType: 'application/json' });
     let toneConv = [
       { en: "anger", name: "怒り", percentile: 0 },
       { en: "fear", name: "不安", percentile: 0 },
@@ -97,7 +102,6 @@ module.exports.analysis = async (req, res) => {
       values: profile.result.values,
       tones: toneConv
     });
-
   } catch (error) {
     console.log('error:', error);
   }

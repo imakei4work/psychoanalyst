@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import Header from '../../molecules/Header/index';
+import SpeechDialog from '../../molecules/SpeechDialog/index';
 import Button from '@material-ui/core/Button';
 import httpClient from '../../tool/httpClient'
-import recognizeMicrophone from 'watson-speech/speech-to-text/recognize-microphone';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -23,171 +23,50 @@ class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      formattedMessages: [],
-      stream: null,
+      open: false,
       personality: null,
       needs: null,
       values: null,
       tones: null
     }
     this.handleOnClick = this.handleOnClick.bind(this);
-    this.handleOnStopClick = this.handleOnStopClick.bind(this);
-    this.keywords = ["音声認識", "ディープラーニング", "技術"];
-    this.dict = {
-      "Agreeableness": "協調性",
-      "Openness": "開放性",
-      "Adventurousness": "冒険 / 経験に前向き",
-      "Artistic interests": "芸術的興味",
-      "Emotionality": "情動性 / 感情に自覚的 / 感情の深さ",
-      "Imagination": "想像力",
-      "Intellect": "知性 / 知的好奇心",
-      "Authority-challenging": "自由主義 / 権威に対して挑戦的 / 多様性を許容",
-      "Conscientiousness": "誠実性",
-      "Achievement striving": "達成努力 / 意欲的",
-      "Cautiousness": "注意深さ / 慎重 / 思慮深さ",
-      "Dutifulness": "忠実さ / 従順な / 責任感",
-      "Orderliness": "秩序性 / 組織的",
-      "Self-discipline": "自制力 / 粘り強い",
-      "Self-efficacy": "自己効力感 / 自信 / 達成感",
-      "Extraversion": "外向性",
-      "Assertiveness": "自己主張 / 独断的",
-      "Cheerfulness": "明朗性 / 陽気 / 肯定的感情",
-      "Excitement-seeking": "刺激希求性",
-      "Outgoing": "親しみやすさ / 外向性 / 温情",
-      "Gregariousness": "社交性 / 付き合い上手",
-      "personality": "協調性",
-      "Altruism": "利他主義 / 利他的",
-      "Cooperation": "協調性 / 寛容 / 従順",
-      "Modesty": "謙虚さ / 慎み深い",
-      "Uncompromising": "道徳性 / 不屈 / 誠実",
-      "Sympathy": "共感性 / 親身",
-      "Trust": "信用 / 人を信じる",
-      "Emotional range": "情緒不安定性",
-      "Fiery": "怒り / 激情的",
-      "Prone to worry": "不安 / 心配性",
-      "Melancholy": "憂うつ / 悲観的 / 不機嫌",
-      "Immoderation": "利己的 / わがまま",
-      "Self-consciousness": "自意識過剰",
-      "Susceptible to stress": "傷つきやすい / 低ストレス耐性 / ストレス感受性",
-      "Excitement": "興奮",
-      "Harmony": "調和",
-      "Curiosity": "好奇心",
-      "Ideal": "理想",
-      "Closeness": "親近感",
-      "Self-expression": "自己表現",
-      "Liberty": "自由",
-      "Love": "愛",
-      "Practicality": "実用性",
-      "Stability": "安定性",
-      "Challenge": "挑戦",
-      "Structure": "構造",
-      "Self-transcendence": "自己超越 / 他人の役に立つ",
-      "Conservation": "不変 / 伝統",
-      "Hedonism": "快楽主義 / 人生を楽しむ",
-      "Self-enhancement": "自己増進 / 成功する",
-      "Openness to change": "変化許容性 / 興奮",
-    }
+    this.handleDialogOnClose = this.handleDialogOnClose.bind(this);
+    //this.keywords = ["音声認識", "ディープラーニング", "技術"];
   }
 
-  componentDidUpdate() {
-    const elements = document.getElementsByClassName('text-line');
-    if (elements.length > 0)
-      elements[elements.length - 1].scrollIntoView();
-  }
-
-  handleOnStopClick() {
-    if (this.state.stream) {
-      this.state.stream.stop();
-      this.state.stream.removeAllListeners();
-      this.state.stream.recognizeStream.removeAllListeners();
-      this.setState({ stream: null });
-    }
-    let messages = this.state.formattedMessages.filter(r => r.results
-      && r.results.length && r.results[0].final);
-    let text = "";
-    messages.forEach(msg => msg.results.forEach(result => text += result.alternatives[0].transcript));
-
-    httpClient.post('/api/analysis', { text: text }).then(res => {
-      res.personality.forEach(p => {
-        p.name = this.dict[p.name];
-        p.hex = "#12939A";
-        p.children.forEach(c => {
-          c.name = this.dict[c.name];
-          c.hex = "#12939A";
+  handleDialogOnClose(text) {
+    if (!text) {
+      this.setState({ open: false });
+    } else {
+      httpClient.post('/api/analysis', { text: text }).then(res => {
+        res.personality.forEach(p => {
+          p.hex = "#12939A";
+          p.children.forEach(c => c.hex = "#12939A");
+        });
+        res.needs.forEach(n => n.hex = "#12939A");
+        res.values.forEach(v => v.hex = "#12939A");
+        res.tones.forEach(t => t.hex = "#12939A");
+        this.setState({
+          personality: res.personality,
+          needs: res.needs,
+          values: res.values,
+          tones: res.tones,
+          open: false
         });
       });
-      res.needs.forEach(n => {
-        n.hex = "#12939A";
-        n.name = this.dict[n.name];
-        n.fullMark = 1
-      });
-      res.values.forEach(v => {
-        v.hex = "#12939A";
-        v.name = this.dict[v.name];
-      });
-      res.tones.forEach(t => {
-        t.hex = "#12939A";
-      });
-      this.setState({
-        personality: res.personality,
-        needs: res.needs,
-        values: res.values,
-        tones: res.tones
-      });
-    });
+    }
   }
 
   handleOnClick() {
-    httpClient.get("/api/login").then(response => {
-      console.log(response);
-      let stream = recognizeMicrophone({
-        access_token: response.accessToken,
-        token: undefined,
-        smart_formatting: true,
-        format: true, // adds capitals, periods, and a few other things (client-side)
-        model: 'ja-JP_BroadbandModel',
-        objectMode: true,
-        interim_results: true,
-        word_alternatives_threshold: 0.01,
-        keywords: undefined,
-        keywords_threshold: undefined, // note: in normal usage, you'd probably set this a bit higher
-        timestamps: true, // set timestamps for each word - automatically turned on by speaker_labels
-        speaker_labels: false,
-        resultsBySpeaker: false,
-        speakerlessInterim: false,
-        url: response.serviceUrl,
-      });
-      stream.on('data', (msg) => {
-        this.setState({ formattedMessages: this.state.formattedMessages.concat(msg) });
-      }).on('error', (err, extra) => console.log(err));
-      this.setState({ stream: stream });
-    });
+    this.setState({ open: true });
   }
 
   render() {
-    let messages = this.state.formattedMessages.filter(r => r.results
-      && r.results.length && r.results[0].final);
-
-    const r = this.state.formattedMessages[this.state.formattedMessages.length - 1];
-    const interim = (!r || !r.results || !r.results.length || r.results[0].final) ? null : r;
-    if (interim) {
-      messages.push(interim);
-    }
-
     return (
       <div className="login" >
         <Header title="音声解析・性格分析" />
+        <SpeechDialog open={this.state.open} onClose={this.handleDialogOnClose} />
         <Button variant="contained" color="secondary" onClick={this.handleOnClick}>録音開始</Button>&nbsp;
-        <Button variant="contained" color="secondary" onClick={this.handleOnStopClick}>停止・性格分析</Button>
-        <div className="text">
-          {
-            messages.map(msg =>
-              msg.results.map((result, i) => (
-                <div key={i} className="text-line">{result.alternatives[0].transcript}</div>
-              ))
-            )
-          }
-        </div>
         <div className="result">
           <div>
             {

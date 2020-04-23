@@ -1,0 +1,8 @@
+#history-search-dialog .MuiDialog-paper {
+	height: 75vh;
+	min-height: 75vh;
+	max-height: 75vh;
+	width: 50vw;
+	min-width: 50vw;
+	max-width: 50vw;
+}

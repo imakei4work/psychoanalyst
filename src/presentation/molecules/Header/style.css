@@ -1,38 +1,5 @@
-.app-header {
-  background-color: #ffffff;
-  display: table;
-  width: 100%;
-}
-
-.app-header-back {
-  display: table-cell;
-  vertical-align: middle;
-  text-align: left;
-  width: 100px;
-}
-
-.app-header-title {
-  display: table-cell;
-  vertical-align: middle;
-}
-
-.app-header-hamburger {
-  display: table-cell;
-  vertical-align: middle;
-  text-align: right;
-  width: 100px;
-}
-
 .header-line {
   margin-top: 5px;
   height: 2px;
   background-color: #ED3833;
-}
-
-#app-logo {
-  float: left;
-  width: 35px;
-  height: auto;
-  margin-right: auto;
-  margin-left: 3vw;
 }
