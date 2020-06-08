@@ -56,7 +56,7 @@ class Analysis extends Component {
           this.setState({ result: conv, maxCols: maxCols, circul: false })
         })
         .catch(error => {
-          alert(error);
+          alert(JSON.stringify(error));
           this.setState({ circul: false });
         });
     })

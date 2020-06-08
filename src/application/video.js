@@ -1,11 +1,9 @@
-const ffmpeg = require('fluent-ffmpeg');
-const ffmpegPath = require('ffmpeg-static');
+const ffmpeg = require('../../exe/config');
 const fs = require('fs');
 const SpeechToTextV1 = require('ibm-watson/speech-to-text/v1');
 const { IamAuthenticator } = require('ibm-watson/auth');
 const sampledata = require('../../sample');
 
-ffmpeg.setFfmpegPath(ffmpegPath);
 const speechToText = new SpeechToTextV1({
   authenticator: new IamAuthenticator({
     apikey: 'MZdmc21GHyc0rmKWziFENKHCfbKn1GCnYCtrc8tMYM67',
@@ -18,9 +16,10 @@ module.exports.analysis = async (req, res) => {
   ffmpeg('mp4/target.mp4')
     .toFormat('mp3')
     .saveToFile('mp3/target.mp3')
-    //.on('start', () => console.log('変換開始'))
-    //.on('codecData', data => console.log(data))
-    //.on('progress', progress => console.log(progress))
+    .on('error', (error) => { console.log(error); return res.status(500).send(error); })
+    .on('start', () => console.log('convert start.'))
+    .on('codecData', data => console.log(data))
+    .on('progress', progress => console.log(progress))
     .on('end', () => {
       const recognizeParams = {
         audio: fs.createReadStream('mp3/target.mp3'),
@@ -53,6 +52,7 @@ module.exports.upload = async (req, res) => {
   let targetFile = req.files.target;
   targetFile.mv('mp4/target.mp4', error => {
     if (error) return res.status(500).send(err);
+    else console.log("copy success.");
   });
   res.send({ message: "success" });
 }
