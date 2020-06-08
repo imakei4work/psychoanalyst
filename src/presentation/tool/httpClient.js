@@ -51,4 +51,23 @@ export default class HttpClient {
 			throw error;
 		}
 	}
+
+	/**
+	 * Http post（file）処理.
+	 * @param {string} url 
+	 * @param {object} data "FormData"
+	 */
+	static async postFile(url, data) {
+		try {
+			let response = await fetch(url, {
+				method: "POST",
+				credentials: "same-origin",  // URLが呼び出し元のスクリプトと同一オリジンだった場合のみクッキーを送信
+				body: data
+			});
+			if (response.ok) return await response.json();
+			throw await response.json(); // エラーの場合はオブジェクトに復元してから直下のcatchへthrow
+		} catch (error) {
+			throw error;
+		}
+	}
 }

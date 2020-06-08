@@ -1,0 +1,23 @@
+.file-select {
+	display: table;
+}
+
+.file-select-button {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.file-select-input {
+	/* アップロードボタンのスタイルを無効にする */
+	display: none;
+}
+
+.file-select-filename {
+	display: table-cell;
+	vertical-align: middle;
+	padding-left: 10px;
+}
+
+.file-select-button .MuiButton-root {
+	width: 180px;
+}

@@ -103,7 +103,7 @@ module.exports.analysis = async (req, res) => {
       tones: toneConv
     });
   } catch (error) {
-    console.log('error:', error);
+    return res.status(500).send(error);
   }
 }
 

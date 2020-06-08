@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 import Login from './pages/login/index';
+import Analysis from './pages/analysis/index';
 
 /**
  * Controllerクラス.
@@ -16,6 +17,7 @@ class App extends Component {
     return (
       <Router>
         <Switch>
+          <Route exact path="/analysis" component={Analysis} />
           <Route exact path="/" component={Login} />
           <Route path="/" render={() => <Redirect to="/" />} />
         </Switch>

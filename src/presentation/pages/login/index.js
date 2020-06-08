@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import Header from '../../molecules/Header/index';
 import SpeechDialog from '../../molecules/SpeechDialog/index';
 import Button from '@material-ui/core/Button';
@@ -31,6 +32,7 @@ class Login extends Component {
     }
     this.handleOnClick = this.handleOnClick.bind(this);
     this.handleDialogOnClose = this.handleDialogOnClose.bind(this);
+    this.handleOnAnalysis = this.handleOnAnalysis.bind(this);
   }
 
   handleDialogOnClose(text) {
@@ -38,7 +40,6 @@ class Login extends Component {
       this.setState({ open: false });
     } else {
       httpClient.post('/api/analysis', { text: text }).then(res => {
-        console.log(JSON.stringify(res.values));
         res.personality.forEach(p => {
           p.hex = "#12939A";
           p.children.forEach(c => c.hex = "#12939A");
@@ -53,6 +54,9 @@ class Login extends Component {
           tones: res.tones,
           open: false
         });
+      }).catch(() => {
+        alert("エラーが発生しました。もう一度やり直してください");
+        this.setState({ open: false });
       });
     }
   }
@@ -61,12 +65,17 @@ class Login extends Component {
     this.setState({ open: true });
   }
 
+  handleOnAnalysis() {
+    this.props.history.push("/analysis");
+  }
+
   render() {
     return (
       <div className="login" >
         <Header title="音声解析・性格分析" />
         <SpeechDialog open={this.state.open} onClose={this.handleDialogOnClose} />
         <Button variant="contained" color="secondary" onClick={this.handleOnClick}>録音開始</Button>&nbsp;
+        <Button variant="contained" color="primary" onClick={this.handleOnAnalysis}>動画解析</Button>
         <div className="result">
           <div>
             {
@@ -313,4 +322,4 @@ class Login extends Component {
     )
   }
 }
-export default Login;
+export default withRouter(Login);
