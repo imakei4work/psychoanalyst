@@ -53,12 +53,12 @@
     "eslint-plugin-react": "7.16.0",
     "file-loader": "3.0.1",
     "fs": "0.0.1-security",
-    "html-webpack-plugin": "3.2.0",
+    "html-webpack-plugin": "5.5.0",
     "style-loader": "0.23.1",
     "tls": "0.0.1",
     "url-loader": "1.1.2",
     "webpack": "4.41.2",
-    "webpack-cli": "3.3.9",
+    "webpack-cli": "3.3.12",
     "webpack-dev-server": "3.8.2",
     "whatwg-fetch": "3.0.0"
   }
